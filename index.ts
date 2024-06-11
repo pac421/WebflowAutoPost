@@ -27,7 +27,7 @@ type BlogSite = {
   postPageHtmlContentSelector: string;
 };
 
-const BLOG_SITES: BlogSite[] = [];
+let BLOG_SITES: BlogSite[] = [];
 
 if (BLOG_SITES.length === 0) {
   throw new Error("No blog site is defined!");
@@ -413,6 +413,8 @@ async function init() {
     apiKey: process.env.OPENAI_API_KEY,
   });
 
+  // If testing mode is enabled, only process the first blog site and the first post
+  BLOG_SITES = TESTING_MODE ? BLOG_SITES.slice(0, 1) : BLOG_SITES;
   for (const blogSite of BLOG_SITES) {
     console.log(`Stealing posts from ${blogSite.name}..`);
     let originalPosts = await stealPosts(blogSite);
